@@ -6,64 +6,54 @@ using UnityEngine;
 
 public class ARDrawer : MonoBehaviour {
 
-    [SerializeField] private GameObject ARCamera;
-    public Color c1 = Color.yellow;
-    public Color c2 = Color.red;
-    public int vertexCount = 10;
 
-    List<Vector3> positionsLine = new List<Vector3>();
-    
+    [SerializeField] private float startWidth = 0.01f; //Try to maintain the ratio of start-endWitdh...
+    [SerializeField] private float endWidth = 0.01f;  //...if you don't want the "stencil" effect
+    [SerializeField] private Shader shader;          //Shader to render the lines: LegacyShader/Diffuse works
+
+    private List<Vector3> positionsLine = new List<Vector3>();  //Auxiliar vector to store LR points
+
     void Start()
     {
+        //Create LR component
         LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Diffuse"));
-        lineRenderer.SetVertexCount(0);
-        lineRenderer.SetColors(c1, c2);
-        lineRenderer.SetWidth(.01f, .01f);
+        
+        //Set LR attributes
+        lineRenderer.material = new Material(shader);
+        lineRenderer.startWidth = startWidth;
+        lineRenderer.endWidth = endWidth;
         lineRenderer.useWorldSpace = false;
-
+        //lineRenderer.SetVertexCount(0);
     }
+
     void Update()
     {        
-        //while user is holding down mouse
+        //While user is holding down mouse
         if (Input.GetMouseButton(0))
         {
-            LineRenderer lineRenderer = GetComponent<LineRenderer>();
-            Vector3 mp = Input.mousePosition;
-            mp.z = 0.5f;
-            Vector3 mwc = Camera.main.ScreenToWorldPoint(mp);
-            Debug.Log(mwc);
+            //Get the user clicks position
+            Vector3 mp = Input.mousePosition;                   //Get the users mouse click
+            mp.z = 0.5f;                                        //reset z coord so it's the same as model
+            Vector3 mwc = Camera.main.ScreenToWorldPoint(mp);   //Get mouse world coords
+
+            //Set LR positions to build the draw
             UpdateLine(mwc);
         }
     }
 
     void UpdateLine(Vector3 newPosWorld)
     {
-        #region comments
-        //find the line gameobject (there should be only one)
-        //GameObject lineObject = GameObject.FindWithTag("line");
-        //get line renderer component
-        //LineRenderer lr = lineObject.GetComponent<LineRenderer>();
-
-        //ToDo: Move this out of the updateLineLoop
-        //Custom LR settings
-        //lr.transform.SetParent(transform);//Set the line renderer new objects as a child of the object who calls the script
-        //lr.material = new Material(shader);
-        //lr.material.color = color;
-        //lr.startWidth = startWidth;
-        //lr.endWidth = endWidth;
-        //instance.gameObject.GetComponent<LineRenderer>().useWorldSpace = false;//Set positions to relative, in this case, to the parent object --> the camera
-        #endregion
-        //get line renderer component
+        //Get LR component
         LineRenderer lr = GetComponent<LineRenderer>();
-        // the line renderer's points are set to 'local', not world.
-        // so we have to transform the world position of new point in local coords  
-        Vector3 newPosLocal = lr.transform.InverseTransformPoint(newPosWorld);
-        //add the new position to line renderer
-        positionsLine.Add(newPosLocal);
 
-        //lr.positionCount++;
-        lr.positionCount = positionsLine.Count;
-        lr.SetPosition(lr.positionCount - 1, newPosLocal);
+        // The line renderer's points are set to 'local', not world...
+        // ...so we have to transform the world position of new point in local coords  
+        Vector3 newPosLocal = lr.transform.InverseTransformPoint(newPosWorld);
+
+        //Add the new position to line renderer
+        positionsLine.Add(newPosLocal);                     //Add to the auxiliar vector the new position
+        //lr.positionCount++;                               
+        lr.positionCount = positionsLine.Count;             //Equalize positions from auxiliar vector to current LR positions vector
+        lr.SetPosition(lr.positionCount - 1, newPosLocal);  //Add the new position
     }
 }
