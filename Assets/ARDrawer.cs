@@ -37,7 +37,7 @@ public class ARDrawer : MonoBehaviour {
 
             //Set LR positions to build the draw
             UpdateLine(mwc);
-        }
+        }        
     }
 
     void UpdateLine(Vector3 newPosWorld)
@@ -54,5 +54,20 @@ public class ARDrawer : MonoBehaviour {
         //lr.positionCount++;                               
         lr.positionCount = positionsLine.Count;             //Equalize positions from auxiliar vector to current LR positions vector
         lr.SetPosition(lr.positionCount - 1, newPosLocal);  //Add the new position
+    }
+
+    public void createDraw(JsonInfo[] drawPositions)
+    {
+        LineRenderer lr = GetComponent<LineRenderer>();
+        foreach (JsonInfo drawPos in drawPositions)
+        {
+            //Generate new vertex position from JSON
+            Vector3 newVertexPosition = new Vector3(drawPos.x, drawPos.y, drawPos.z);
+
+            //Add the new position to line renderer
+            positionsLine.Add(newVertexPosition);                 //Add to the auxiliar vector the new position
+            lr.positionCount = positionsLine.Count;         //Equalize positions from auxiliar vector to current LR positions vector
+            lr.SetPosition(drawPos.index, newVertexPosition);     //Add the new position 
+        }
     }
 }
