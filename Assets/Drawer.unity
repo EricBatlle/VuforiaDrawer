@@ -807,6 +807,21 @@ Prefab:
       propertyPath: ARCamera
       value: 
       objectReference: {fileID: 552186701}
+    - target: {fileID: 114302672788398464, guid: 6d8d1d6acecf04b4e9038ab0b15b537c,
+        type: 2}
+      propertyPath: shader
+      value: 
+      objectReference: {fileID: 7, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 114302672788398464, guid: 6d8d1d6acecf04b4e9038ab0b15b537c,
+        type: 2}
+      propertyPath: startWidth
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 114302672788398464, guid: 6d8d1d6acecf04b4e9038ab0b15b537c,
+        type: 2}
+      propertyPath: endWidth
+      value: 0.01
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6d8d1d6acecf04b4e9038ab0b15b537c, type: 2}
   m_IsPrefabParent: 0
