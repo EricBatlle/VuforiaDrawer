@@ -25,8 +25,7 @@ public class JsonManager : MonoBehaviour {
         {
             Debug.Log("WWW Ok!: " + www.text);
             JsonInfo[] objects = JsonHelper.getJsonArray<JsonInfo>(www.text);
-            Debug.Log(objects[0].index);
-            m_drawerManager.CreateDraw(objects);
+            m_drawerManager.loadDraw(objects);
         }
         else
         {

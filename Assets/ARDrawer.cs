@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 //Creaed by Eric Batlle Clavero
@@ -37,7 +38,12 @@ public class ARDrawer : MonoBehaviour {
 
             //Set LR positions to build the draw
             UpdateLine(mwc);
-        }        
+        }
+
+        if (Input.GetMouseButton(1))
+        {
+            SaveToString();
+        }
     }
 
     void UpdateLine(Vector3 newPosWorld)
@@ -65,9 +71,38 @@ public class ARDrawer : MonoBehaviour {
             Vector3 newVertexPosition = new Vector3(drawPos.x, drawPos.y, drawPos.z);
 
             //Add the new position to line renderer
-            positionsLine.Add(newVertexPosition);                 //Add to the auxiliar vector the new position
-            lr.positionCount = positionsLine.Count;         //Equalize positions from auxiliar vector to current LR positions vector
-            lr.SetPosition(drawPos.index, newVertexPosition);     //Add the new position 
+            positionsLine.Add(newVertexPosition);               //Add to the auxiliar vector the new position
+            lr.positionCount = positionsLine.Count;             //Equalize positions from auxiliar vector to current LR positions vector
+            lr.SetPosition(drawPos.index, newVertexPosition);   //Add the new position 
         }
+    }
+
+    public void SaveToString()
+    {
+        LineRenderer lr = GetComponent<LineRenderer>();
+        Vector3 vector = new Vector3(2f, 3.4f, 4.56f);
+
+        JsonInfoList list = new JsonInfoList();  //Auxiliar vector to store LR points
+        list.jsonInfoList = new List<JsonInfo>();
+
+        JsonInfo test = new JsonInfo();
+        test.x = vector.x;
+        test.y = vector.y;
+        test.z = vector.z;
+        test.index = 0;
+
+        JsonInfo test2 = new JsonInfo();
+        test2.x = vector.x;
+        test2.y = vector.y;
+        test2.z = vector.z;
+        test2.index = 0;
+
+        list.jsonInfoList.Add(test);
+        list.jsonInfoList.Add(test2);
+
+        String result = JsonUtility.ToJson(list);
+        result = result.Substring(result.IndexOf("[")); //Remove everything before [ 
+        result = result.Substring(0, result.LastIndexOf("]") + 1); //Remove everything after ] 
+        print(result);
     }
 }

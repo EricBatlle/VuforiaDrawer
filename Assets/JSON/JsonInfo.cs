@@ -9,3 +9,9 @@ public class JsonInfo {
     public float z;
     public int index;
 }
+
+[System.Serializable]
+public class JsonInfoList
+{
+    public List<JsonInfo> jsonInfoList;
+}
