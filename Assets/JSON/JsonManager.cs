@@ -24,12 +24,13 @@ public class JsonManager : MonoBehaviour {
         if (www.error == null)
         {
             Debug.Log("WWW Ok!: " + www.text);
-            JsonInfo[] objects = JsonHelper.getJsonArray<JsonInfo>(www.text);
+            JsonVertexInfo[] objects = JsonHelper.getJsonArray<JsonVertexInfo>(www.text);
             m_drawerManager.loadDraw(objects);
         }
         else
         {
             Debug.Log("WWW Error: " + www.error);
         }
-    }    
+    }
+    
 }

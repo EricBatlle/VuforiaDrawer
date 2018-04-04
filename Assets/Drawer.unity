@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecdc0bc8584a991428d468d7499a2808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drawer: {fileID: 0}
 --- !u!4 &1725299
 Transform:
   m_ObjectHideFlags: 0
@@ -474,7 +475,7 @@ Prefab:
     - target: {fileID: 114870629444169692, guid: d908e33eab3b0694781fd5c40ea1e273,
         type: 2}
       propertyPath: jsonUrl
-      value: http://192.168.0.105/simpleDraw.json
+      value: http://192.168.0.105/drawTry.json
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d908e33eab3b0694781fd5c40ea1e273, type: 2}

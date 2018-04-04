@@ -11,7 +11,7 @@ public class ARDrawer : MonoBehaviour {
     [SerializeField] private float endWidth = 0.01f;  //...if you don't want the "stencil" effect
     [SerializeField] private Shader shader;          //Shader to render the lines: LegacyShader/Diffuse works
 
-    private List<Vector3> positionsLine = new List<Vector3>();  //Auxiliar vector to store LR points
+    public List<Vector3> positionsLine = new List<Vector3>();  //Auxiliar vector to store LR points
 
     void Start()
     {
@@ -23,7 +23,8 @@ public class ARDrawer : MonoBehaviour {
         lineRenderer.startWidth = startWidth;
         lineRenderer.endWidth = endWidth;
         lineRenderer.useWorldSpace = false;
-        //lineRenderer.SetVertexCount(0);
+        //Restart the positions just in case buffers make some extrapoints
+        lineRenderer.SetVertexCount(0);
     }
 
     void Update()
@@ -39,11 +40,25 @@ public class ARDrawer : MonoBehaviour {
             //Set LR positions to build the draw
             UpdateLine(mwc);
         }
-
-        if (Input.GetMouseButton(1))
+        if (Input.GetKeyDown("space"))
         {
-            SaveToString();
+            //Remove old LR
+            LineRenderer lr = GetComponent<LineRenderer>();
+            DestroyImmediate(lr);
+            positionsLine.Clear(); //Needed to avoid start drawing from 0,0,0
+            
+            //Create LR component
+            LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
+        
+            //Set LR attributes
+            lineRenderer.material = new Material(shader);
+            lineRenderer.startWidth = startWidth;
+            lineRenderer.endWidth = endWidth;
+            lineRenderer.useWorldSpace = false;
+            //Restart the positions just in case buffers make some extrapoints
+            lineRenderer.positionCount = 0;
         }
+
     }
 
     void UpdateLine(Vector3 newPosWorld)
@@ -61,48 +76,5 @@ public class ARDrawer : MonoBehaviour {
         lr.positionCount = positionsLine.Count;             //Equalize positions from auxiliar vector to current LR positions vector
         lr.SetPosition(lr.positionCount - 1, newPosLocal);  //Add the new position
     }
-
-    public void createDraw(JsonInfo[] drawPositions)
-    {
-        LineRenderer lr = GetComponent<LineRenderer>();
-        foreach (JsonInfo drawPos in drawPositions)
-        {
-            //Generate new vertex position from JSON
-            Vector3 newVertexPosition = new Vector3(drawPos.x, drawPos.y, drawPos.z);
-
-            //Add the new position to line renderer
-            positionsLine.Add(newVertexPosition);               //Add to the auxiliar vector the new position
-            lr.positionCount = positionsLine.Count;             //Equalize positions from auxiliar vector to current LR positions vector
-            lr.SetPosition(drawPos.index, newVertexPosition);   //Add the new position 
-        }
-    }
-
-    public void SaveToString()
-    {
-        LineRenderer lr = GetComponent<LineRenderer>();
-        Vector3 vector = new Vector3(2f, 3.4f, 4.56f);
-
-        JsonInfoList list = new JsonInfoList();  //Auxiliar vector to store LR points
-        list.jsonInfoList = new List<JsonInfo>();
-
-        JsonInfo test = new JsonInfo();
-        test.x = vector.x;
-        test.y = vector.y;
-        test.z = vector.z;
-        test.index = 0;
-
-        JsonInfo test2 = new JsonInfo();
-        test2.x = vector.x;
-        test2.y = vector.y;
-        test2.z = vector.z;
-        test2.index = 0;
-
-        list.jsonInfoList.Add(test);
-        list.jsonInfoList.Add(test2);
-
-        String result = JsonUtility.ToJson(list);
-        result = result.Substring(result.IndexOf("[")); //Remove everything before [ 
-        result = result.Substring(0, result.LastIndexOf("]") + 1); //Remove everything after ] 
-        print(result);
-    }
+   
 }
