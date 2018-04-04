@@ -15,18 +15,10 @@ public class ARDrawer : MonoBehaviour {
 
     void Start()
     {
-        //Create LR component
-        LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-        
-        //Set LR attributes
-        lineRenderer.material = new Material(shader);
-        lineRenderer.startWidth = startWidth;
-        lineRenderer.endWidth = endWidth;
-        lineRenderer.useWorldSpace = false;
-        //Restart the positions just in case buffers make some extrapoints
-        lineRenderer.SetVertexCount(0);
+        //Create LR component and set initial attributes        
+        setLine();
     }
-
+  
     void Update()
     {        
         //While user is holding down mouse
@@ -43,22 +35,32 @@ public class ARDrawer : MonoBehaviour {
         if (Input.GetKeyDown("space"))
         {
             //Remove old LR
-            LineRenderer lr = GetComponent<LineRenderer>();
-            DestroyImmediate(lr);
-            positionsLine.Clear(); //Needed to avoid start drawing from 0,0,0
-            
-            //Create LR component
-            LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-        
-            //Set LR attributes
-            lineRenderer.material = new Material(shader);
-            lineRenderer.startWidth = startWidth;
-            lineRenderer.endWidth = endWidth;
-            lineRenderer.useWorldSpace = false;
-            //Restart the positions just in case buffers make some extrapoints
-            lineRenderer.positionCount = 0;
+            removeLine();
+            //Create LR component and set initial attributes        
+            setLine();
         }
 
+    }
+
+    void setLine()
+    {
+        LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>(); //Create component
+        //Set LR attributes
+        lineRenderer.material = new Material(shader);
+        lineRenderer.startWidth = startWidth;
+        lineRenderer.endWidth = endWidth;
+        lineRenderer.useWorldSpace = false;
+        lineRenderer.SetVertexCount(0);                         //Restart the positions just in case buffers make some extrapoints
+    }
+
+    void removeLine()
+    {
+        LineRenderer lr = GetComponent<LineRenderer>(); //Get initial component
+        if (lr != null)
+        {
+            DestroyImmediate(lr);                       //Destroy it inmediatly, in case another line renderer is added just next to it
+            positionsLine.Clear();                      //Needed to avoid start drawing from 0,0,0
+        }
     }
 
     void UpdateLine(Vector3 newPosWorld)
