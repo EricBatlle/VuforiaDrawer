@@ -4,7 +4,8 @@ using UnityEngine;
 
 //Creaed by Eric Batlle Clavero
 
-public class ARDrawer : MonoBehaviour {
+public class Draw : MonoBehaviour
+{
 
 
     [SerializeField] private float startWidth = 0.01f; //Try to maintain the ratio of start-endWitdh...
@@ -12,17 +13,15 @@ public class ARDrawer : MonoBehaviour {
     [SerializeField] private Shader shader;          //Shader to render the lines: LegacyShader/Diffuse works
 
     public List<Vector3> positionsLine = new List<Vector3>();  //Auxiliar vector to store LR points
-
-    public List<Draw> draws = new List<Draw>();  //Auxiliar vector to store LR points
-
+    
     void Start()
     {
         //Create LR component and set initial attributes        
         setLine();
     }
-  
+
     void Update()
-    {        
+    {
         //While user is holding down mouse
         if (Input.GetMouseButton(0))
         {
@@ -80,5 +79,5 @@ public class ARDrawer : MonoBehaviour {
         lr.positionCount = positionsLine.Count;             //Equalize positions from auxiliar vector to current LR positions vector
         lr.SetPosition(lr.positionCount - 1, newPosLocal);  //Add the new position
     }
-   
+
 }
